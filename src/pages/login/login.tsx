@@ -1,7 +1,7 @@
 import { createSignal } from "solid-js"
 import { useNavigate } from "@solidjs/router"
-import { login } from "../dao/user"
-import { BadRequestError, InternalServerError, UnauthorizedError } from "../errors/errors"
+import { login } from "../../dao/user"
+import { BadRequestError, InternalServerError, UnauthorizedError } from "../../errors/errors"
 
 export default function Login() {
     const [identifier, setIdentifier] = createSignal("")

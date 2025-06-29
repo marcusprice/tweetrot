@@ -1,29 +1,39 @@
-import { createEffect, JSX } from "solid-js"
+import { createEffect, createSignal, JSX, Show } from "solid-js"
 import { useNavigate } from "@solidjs/router"
-import { user } from "../store/user"
+import { setUser, user } from "../store/user"
 import { LOCAL_STORAGE_TOKEN_KEY } from "../constants/tokens"
 import { validateToken } from "../dao/user"
 
 export default function RequireAuth(props: { children: JSX.Element; redirectTo: string }) {
     const navigate = useNavigate()
+    const [checkingAuth, setCheckingAuth] = createSignal(true)
 
     createEffect(() => {
-        if (!user()) {
-            // try to get access token and authenticate
-            const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
-            if (token) {
-                validateToken(token)
-                    .then(() => {
-                        navigate("/")
-                    })
-                    .catch(() => {
-                        navigate(props.redirectTo ?? "/login", { replace: true })
-                    })
-            } else {
-                navigate(props.redirectTo ?? "/login", { replace: true })
-            }
+        if (user()) {
+            setCheckingAuth(false)
+            return
         }
+
+        const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+        if (!token) {
+            navigate(props.redirectTo ?? "/login", { replace: true })
+            return
+        }
+
+        validateToken(token)
+            .then((user) => {
+                setUser(user)
+                setCheckingAuth(false)
+            })
+            .catch(() => {
+                navigate(props.redirectTo ?? "/login", { replace: true })
+            })
     })
 
-    return <>{user() && props.children}</>
+    // prettier-ignore
+    return (
+        <Show when={!checkingAuth()}>
+            {props.children}        
+        </Show>
+    )
 }

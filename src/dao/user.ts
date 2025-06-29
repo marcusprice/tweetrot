@@ -1,4 +1,5 @@
 import { LOGIN_ENDPOINT, VALIDATE_TOKEN_ENDPOINT } from "../constants/routes"
+import { User } from "../types/user"
 import { setUser } from "../store/user"
 import {
     BadRequestError,
@@ -68,7 +69,7 @@ export function login(identifier: string, password: string): Promise<void> {
         })
 }
 
-export function validateToken(token: string): Promise<void> {
+export function validateToken(token: string): Promise<User> {
     const request = {
         method: "GET",
         headers: {
@@ -88,12 +89,7 @@ export function validateToken(token: string): Promise<void> {
             return res.json()
         })
         .then((userJson) => {
-            setUser({
-                email: userJson.email,
-                username: userJson.username,
-                firstName: userJson.firstName,
-                lastName: userJson.lastName,
-                displayName: userJson.displayName,
-            })
+            const user = userJson as User
+            return user
         })
 }
