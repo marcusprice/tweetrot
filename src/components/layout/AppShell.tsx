@@ -11,15 +11,63 @@ export default function AppShell(props: AppShellProps): JSX.Element {
     return( 
         <div class={styles.app}>
             <div class={styles["nav-bar"]}>
-                <div><A href="/">Home</A> </div>
-                <div><A href="/">Search</A> </div>
-                <div><A href="/">Notifications</A> </div>
-                <div><A href="/">Messages</A> </div>
-                <div><A href="/">Cooper</A> </div>
-                <div><A href="/">Bookmarks</A> </div>
-                <div><A href="/">Communities</A> </div>
-                <div><A href="/">Profiles</A> </div>
-                <div><A href="/">Lists</A> </div>
+                <div>
+                    <div><A href="/"><i class="bi bi-twitter"></i></A> </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-house"></i>
+                            Home
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-search"></i>
+                            Search
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-bell"></i>
+                            Notifications
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-envelope-open"></i>
+                            Messages
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-chat"></i>
+                            Dale Cooper
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-bookmark"></i>
+                            Bookmarks
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-people"></i>
+                            Communities
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-person"></i>
+                            Profile
+                        </A>
+                    </div>
+                    <div>
+                        <A href="/">
+                            <i class="bi bi-list"></i>
+                            Lists
+                        </A> 
+                    </div>
+                </div>
             </div>
 
             <div class={styles.content}>

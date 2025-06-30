@@ -8,6 +8,26 @@
 .nav-bar {
     width: 25%;
     border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    align-items:flex-end;
+}
+
+.nav-bar * i {
+    margin-right: 16px;
+}
+
+.nav-bar * a {
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.nav-bar div {
+    margin-right: 16px;
+}
+
+.nav-bar div div {
+    margin-bottom: 16px;    
 }
 
 .content {
