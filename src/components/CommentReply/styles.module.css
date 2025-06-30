@@ -23,17 +23,22 @@
 .comment-form-container {
     flex-grow:1;
     padding: 0 16px;
+    padding-top: 6px;
+}
+
+.comment-form {
+    width: 100%;
     display: flex;
     justify-content:space-between;
     align-items:center;
 }
 
-.comment-form-container form {
+.comment-form form {
     flex-grow: 1;
     height: 100%;
 }
 
-.comment-form-container form input {
+.comment-form form input {
     height: 100%;
     width: 100%;
     background: #000;
@@ -41,7 +46,7 @@
     border: none;
 }
 
-.comment-form-container form input:focus {
+.comment-form form input:focus {
   outline: none;
 }
 
@@ -55,4 +60,50 @@
     font-weight: 700;
     padding: 0 16px;
     border-radius: 32px;
+}
+
+.reply-button:disabled {
+    background: #777;
+}
+
+.file-upload-bar {
+    margin-top: 4px;
+}
+
+.file-upload-button {
+    background: 0;
+    border: none;
+    color: #fff;
+}
+
+.file-upload-button:disabled {
+}
+
+.image-preview-container {
+    margin-top: 8px;
+    width: 100%;
+    position: relative;
+}
+
+.image-preview {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+.image-upload-cancel {
+    border: none;
+    background: rgba(0,0,0,.6);
+    position: absolute;
+    color: #fff;
+    top: 16px;
+    right: 16px;
+    font-weight: 700;
+    font-size: 28px;
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -9,15 +9,32 @@ import {
     InternalServerError,
 } from "../errors/errors"
 
-export function postComment(
-    content: string,
-    postID: number,
-    parentCommentID = 0
-): Promise<CommentType> {
+export type PostCommentOptions = {
+    postID: number
+    content?: string
+    image?: File
+    parentCommentID?: number
+}
+
+export function postComment(opts: PostCommentOptions): Promise<CommentType> {
     const formData = new FormData()
-    formData.append("content", content)
-    formData.append("postID", postID.toString())
-    formData.append("parentCommentID", parentCommentID.toString())
+    if (!opts.content && !opts.image) {
+        throw new BadRequestError("need content or image")
+    }
+
+    formData.append("postID", opts.postID.toString())
+
+    if (opts.content) {
+        formData.append("content", opts.content)
+    }
+
+    if (opts.image) {
+        formData.append("image", opts.image)
+    }
+
+    if (opts.parentCommentID) {
+        formData.append("parentCommentID", opts.parentCommentID.toString())
+    }
 
     const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
     const request = {
