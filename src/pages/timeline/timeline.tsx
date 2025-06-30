@@ -1,7 +1,8 @@
 import { For, onMount, createMemo, createResource, createSignal } from "solid-js"
 import { getTimelinePosts } from "../../dao/timeline"
-import { TimelinePostType } from "../../types/post"
+import { PostType, TimelinePostType } from "../../types/post"
 import TimelinePost from "../../components/TimelinePost/TimelinePost"
+import { CreatePost } from "../../components/CreatePost/CreatePost"
 
 export default function Timeline() {
     const [posts, setPosts] = createSignal<TimelinePostType[]>([])
@@ -25,6 +26,8 @@ export default function Timeline() {
         })
     })
 
+    function handleNewPost(post: PostType) {}
+
     onMount(() => {
         // Always reset on new mount
         setPosts([])
@@ -35,6 +38,7 @@ export default function Timeline() {
     // prettier-ignore
     return (
         <div>
+            <CreatePost onPost={handleNewPost}/>
             <For each={posts()}>
                 {(item: TimelinePostType) => <TimelinePost post={item}/>}
             </For>

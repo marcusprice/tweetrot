@@ -1,5 +1,5 @@
 import { StatusCodes } from "../constants/http"
-import { POST } from "../constants/routes"
+import { CREATE_POST, POST } from "../constants/routes"
 import { LOCAL_STORAGE_TOKEN_KEY } from "../constants/tokens"
 import {
     BadRequestError,
@@ -43,7 +43,40 @@ export function fetchPost(postID: number): Promise<PostType> {
             return result.json()
         })
         .then((json) => {
-            const postJson = json as PostPayload
+            const postJson = json as PostType
             return postJson
+        })
+}
+
+export function createPost(content: string, image: File | undefined): Promise<PostType> {
+    const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+    if (content === "" && image == undefined) {
+        throw new BadRequestError("need content or image")
+    }
+    const formData = new FormData()
+
+    if (content !== "") {
+        formData.append("content", content)
+    }
+
+    if (image !== undefined) {
+        formData.append("image", image)
+    }
+
+    const request = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+    }
+
+    return fetch(CREATE_POST, request)
+        .then((response) => {
+            return response.json()
+        })
+        .then((json) => {
+            const post = json as PostType
+            return post
         })
 }
