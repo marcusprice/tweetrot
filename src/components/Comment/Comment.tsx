@@ -38,7 +38,7 @@ export default function Comment(props: CommentProps) {
                     <div class={styles["comment-engagement"]}>
                         <span>
                             <i class="bi bi-chat"></i>
-                            {props.comment.replies.length}
+                            {props.comment.replies.length || 0}
                         </span>
 
                         <span>

@@ -65,6 +65,7 @@ export function login(identifier: string, password: string): Promise<void> {
                 firstName: json.firstName,
                 lastName: json.lastName,
                 displayName: json.displayName,
+                avatar: json.avatar,
             })
         })
 }

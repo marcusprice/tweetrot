@@ -21,8 +21,8 @@ export default function RequireAuth(props: { children: JSX.Element; redirectTo: 
         }
 
         validateToken(token)
-            .then((user) => {
-                setUser(user)
+            .then((userJson) => {
+                setUser(userJson)
                 setCheckingAuth(false)
             })
             .catch(() => {

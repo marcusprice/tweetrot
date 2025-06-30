@@ -1,0 +1,58 @@
+.comment-reply {
+    padding: 8px 0;
+    display: flex;
+    border-bottom: 1px solid #333;
+}
+
+.avatar-col {
+    width: 60px;    
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.comment-form-container {
+    flex-grow:1;
+    padding: 0 16px;
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.comment-form-container form {
+    flex-grow: 1;
+    height: 100%;
+}
+
+.comment-form-container form input {
+    height: 100%;
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+}
+
+.comment-form-container form input:focus {
+  outline: none;
+}
+
+.reply-button {
+    cursor: pointer;
+    height: 38px;
+    border: none;
+    background: #fff;
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 0 16px;
+    border-radius: 32px;
+}

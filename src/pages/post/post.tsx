@@ -1,17 +1,27 @@
-import { JSX, For, Show, createEffect, createResource } from "solid-js"
+import { JSX, For, Show, createResource } from "solid-js"
 import { useParams } from "@solidjs/router"
 import { fetchPost } from "../../dao/post"
-import { PostType } from "../../types/post"
+import { CommentType, PostType } from "../../types/post"
 import styles from "./styles.module.css"
 import Comment from "../../components/Comment/Comment"
+import { CommentReply } from "../../components/CommentReply/CommentReply"
+import { user } from "../../store/user"
 
 export function Post(): JSX.Element {
     const params = useParams()
-    const [postData] = createResource<PostType, number>(() => parseInt(params.id), fetchPost)
+    const [postData, { mutate }] = createResource<PostType, number>(
+        () => parseInt(params.id),
+        fetchPost
+    )
 
-    createEffect(() => {
-        console.log(postData())
-    })
+    function handleCommentReply(newComment: CommentType) {
+        const currentPost: PostType = postData()!
+        const newPost: PostType = {
+            ...currentPost,
+            comments: [newComment, ...currentPost.comments],
+        }
+        mutate(newPost)
+    }
 
     // prettier-ignore
     return (
@@ -73,6 +83,11 @@ export function Post(): JSX.Element {
                         </div>
                     </div>
                 </div>
+                <CommentReply
+                    userAvatar={user()?.avatar!}
+                    postID={postData()?.postID!}
+                    onReply={handleCommentReply}
+                />
                 <For each={postData()?.comments}>
                     {(comment) => <Comment comment={comment}/>}
                 </For>
