@@ -71,7 +71,7 @@ export function CreatePost(props: CreatePostProps): JSX.Element {
                     <form id="post-reply-form">
                         <input
                             value={postContent()}
-                            placeholder="What's going on?"
+                            placeholder="What's happening?"
                             oninput={(e) => setPostContent(e.target.value)}
                             onfocus={() => toggleInput(true)}
                             id="post-reply"
@@ -79,16 +79,8 @@ export function CreatePost(props: CreatePostProps): JSX.Element {
                         /> 
                     </form>
 
-                    <button
-                        form="post-reply-form"
-                        class={styles["reply-button"]}
-                        onclick={handleClick}
-                        disabled={postContent().length <= 0 && imageUploadFile() === undefined}
-                    >
-                        Post
-                    </button>
                 </div>
-                <div class={styles["file-upload-bar"]} style={`display: ${inputToggled() ? "block" : "none"}`}>
+                <div class={styles["file-upload-bar"]}>
                     <Show when={imageUploadPreview()}>
                         <div class={styles["image-preview-container"]}>
                             <img class={styles["image-preview"]} src={imageUploadPreview()}/>
@@ -97,9 +89,21 @@ export function CreatePost(props: CreatePostProps): JSX.Element {
                             </button>
                         </div>
                     </Show>
-                    <button class={styles["file-upload-button"]} onclick={handleUploadClick}>
-                        <i class="bi bi-image"></i>
-                    </button>
+
+                    <div>
+                        <button class={styles["file-upload-button"]} onclick={handleUploadClick}>
+                            <i class="bi bi-image"></i>
+                        </button>
+
+                        <button
+                            form="post-reply-form"
+                            class={styles["reply-button"]}
+                            onclick={handleClick}
+                            disabled={postContent().length <= 0 && imageUploadFile() === undefined}
+                        >
+                            Post
+                        </button> 
+                    </div>
 
                     <input
                         type="file"

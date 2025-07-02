@@ -1,5 +1,6 @@
 .post-reply {
-    padding: 32px 0;
+    margin-top: 32px;
+    padding-bottom: 8px;
     display: flex;
     border-bottom: 1px solid #333;
 }
@@ -68,9 +69,15 @@
 }
 
 .file-upload-bar {
-    border-top: solid #333 1px;
     margin-top: 16px;
     padding-top: 8px;
+    width: 100%;
+}
+
+.file-upload-bar div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .file-upload-button {
@@ -81,6 +88,7 @@
 
 .image-preview-container {
     margin-top: 8px;
+    margin-bottom: 8px;
     width: 100%;
     position: relative;
 }
