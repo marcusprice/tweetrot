@@ -4,9 +4,10 @@ import { LOCAL_STORAGE_TOKEN_KEY } from "../constants/tokens"
 import { InternalServerError } from "../errors/errors"
 import { TimelineResponse } from "../types/http-responses"
 
-export function getTimelinePosts(offset: number): Promise<TimelineResponse> {
+export function getTimelinePosts(view: string, offset: number): Promise<TimelineResponse> {
     const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
     const params = new URLSearchParams()
+    params.set("view", view)
     params.set("limit", "10")
     params.set("offset", offset.toString())
 

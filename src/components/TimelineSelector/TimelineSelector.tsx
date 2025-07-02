@@ -3,13 +3,13 @@ import styles from "./styles.module.css"
 import { FOLLOWING, FOR_YOU } from "../../constants/timeline"
 
 type TimelineSelectorProps = {
-    onSelect: (timeline: number) => void
+    onSelect: (timeline: string) => void
 }
 
 export default function TimelineSelector(props: TimelineSelectorProps): JSX.Element {
     const [selected, setSelected] = createSignal(FOR_YOU)
 
-    function handleSelect(e: MouseEvent, timeline: number) {
+    function handleSelect(e: MouseEvent, timeline: string) {
         e.preventDefault()
         setSelected(timeline)
         props.onSelect(timeline)

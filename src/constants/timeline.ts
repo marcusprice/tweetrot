@@ -1,2 +1,2 @@
-export const FOR_YOU = 1
-export const FOLLOWING = 2
+export const FOR_YOU = "FOR_YOU"
+export const FOLLOWING = "FOLLOWING"

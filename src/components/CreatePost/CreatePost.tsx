@@ -10,7 +10,6 @@ type CreatePostProps = {
 
 export function CreatePost(props: CreatePostProps): JSX.Element {
     const [postContent, setPostContent] = createSignal("")
-    const [inputToggled, toggleInput] = createSignal(false)
     const [imageUploadFile, setImageUploadFile] = createSignal<File | undefined>()
     const [imageUploadPreview, setImageUploadPreview] = createSignal<string | undefined>()
     let fileInput: HTMLInputElement | undefined
@@ -24,7 +23,6 @@ export function CreatePost(props: CreatePostProps): JSX.Element {
                 setPostContent("")
                 setImageUploadPreview("")
                 setImageUploadFile(undefined)
-                toggleInput(false)
             })
             .catch((err) => {
                 console.error(err)
@@ -73,7 +71,6 @@ export function CreatePost(props: CreatePostProps): JSX.Element {
                             value={postContent()}
                             placeholder="What's happening?"
                             oninput={(e) => setPostContent(e.target.value)}
-                            onfocus={() => toggleInput(true)}
                             id="post-reply"
                             type="text" 
                         /> 
