@@ -3,6 +3,7 @@ import { getTimelinePosts } from "../../dao/timeline"
 import { PostType, TimelinePostType } from "../../types/post"
 import TimelinePost from "../../components/TimelinePost/TimelinePost"
 import { CreatePost } from "../../components/CreatePost/CreatePost"
+import TimelineSelector from "../../components/TimelineSelector/TimelineSelector"
 
 export default function Timeline() {
     const [posts, setPosts] = createSignal<TimelinePostType[]>([])
@@ -35,10 +36,17 @@ export default function Timeline() {
         setOffset(0) // triggers createResource if fetchOffset changes
     })
 
+    function onTimelineSelect(timeline: number) {
+        console.log(timeline)
+    }
+
     // prettier-ignore
     return (
         <div>
+            <TimelineSelector onSelect={onTimelineSelect}/>
+
             <CreatePost onPost={handleNewPost}/>
+
             <For each={posts()}>
                 {(item: TimelinePostType) => <TimelinePost post={item}/>}
             </For>
