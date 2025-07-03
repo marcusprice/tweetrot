@@ -33,6 +33,7 @@ export interface PostType {
     updatedAt: string
     author: Author
     comments: CommentType[]
+    liked: boolean
 }
 
 export interface TimelinePostType extends PostType {

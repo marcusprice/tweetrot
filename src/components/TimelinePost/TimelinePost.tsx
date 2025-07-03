@@ -1,14 +1,32 @@
-import { Show } from "solid-js"
+import { createSignal, Show } from "solid-js"
 import styles from "./styles.module.css"
-import { PostType, TimelinePostType } from "../../types/post"
+import { TimelinePostType } from "../../types/post"
 import { A } from "@solidjs/router"
 import { timeSince } from "../../utils/utils"
+import { likePost } from "../../dao/post"
 
 type PostProps = {
     post: TimelinePostType
 }
 
 export default function TimelinePost(props: PostProps) {
+    const [liked, setLiked] = createSignal(props.post.liked)
+    const [likeCount, setLikeCount] = createSignal(props.post.likeCount)
+
+    function handlePostLike(e: MouseEvent, isLiked: boolean) {
+        e.preventDefault()
+        const method = isLiked ? "DELETE" : "PUT"
+
+        likePost(props.post.postID, method).then(() => {
+            setLiked((prev) => !prev)
+            if (method === "PUT") {
+                setLikeCount((prev) => prev + 1)
+            } else {
+                setLikeCount((prev) => prev - 1)
+            }
+        })
+    }
+
     return (
         <div>
             <Show when={props.post.retweeterUsername !== ""}>
@@ -62,8 +80,24 @@ export default function TimelinePost(props: PostProps) {
                             </span>
 
                             <span>
-                                <i class="bi bi-heart"></i>
-                                {props.post.likeCount}
+                                <Show when={liked()}>
+                                    <button
+                                        class={styles["postActionButton"]}
+                                        onclick={(e) => handlePostLike(e, liked())}
+                                    >
+                                        <i class={`bi bi-heart-fill ${styles["liked-heart"]}`}></i>
+                                    </button>
+                                </Show>
+
+                                <Show when={!liked()}>
+                                    <button
+                                        class={styles["postActionButton"]}
+                                        onclick={(e) => handlePostLike(e, liked())}
+                                    >
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </Show>
+                                {likeCount()}
                             </span>
 
                             <span>

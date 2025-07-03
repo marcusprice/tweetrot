@@ -1,5 +1,5 @@
 import { StatusCodes } from "../constants/http"
-import { CREATE_POST, POST } from "../constants/routes"
+import { CREATE_POST, LIKE_POST, POST } from "../constants/routes"
 import { LOCAL_STORAGE_TOKEN_KEY } from "../constants/tokens"
 import {
     BadRequestError,
@@ -79,4 +79,24 @@ export function createPost(content: string, image: File | undefined): Promise<Po
             const post = json as PostType
             return post
         })
+}
+
+export function likePost(postID: number, method: "PUT" | "DELETE"): Promise<void> {
+    const route = LIKE_POST.replace(":id", postID.toString())
+    const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+
+    const request = {
+        method: method,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return fetch(route, request).then((response) => {
+        if (response.status == StatusCodes.NO_CONTENT) {
+            return
+        } else {
+            // TODO: handle errors
+        }
+    })
 }
