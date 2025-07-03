@@ -1,4 +1,4 @@
-import { For, onMount, createMemo, createResource, createSignal, Show } from "solid-js"
+import { For, createResource, createSignal, Show } from "solid-js"
 import { getTimelinePosts } from "../../dao/timeline"
 import { PostType, TimelinePostType } from "../../types/post"
 import TimelinePost from "../../components/TimelinePost/TimelinePost"

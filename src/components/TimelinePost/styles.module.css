@@ -1,3 +1,15 @@
+.retweeted-by {
+    margin-top: 8px;
+    color: #888;
+    font-size: 13px;
+    margin-left: 50px;
+    font-weight: 700;
+}
+
+.retweeted-by i {
+    margin-right: 10px;
+}
+
 .timeline-post {
     padding-top: 8px;
     border-bottom: 1px solid #333;
