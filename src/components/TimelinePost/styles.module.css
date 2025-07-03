@@ -79,16 +79,25 @@ a {
     color: #888;
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin-top: 8px;
     margin-bottom: 4px;
 }
-
 
 .postActionButton {
     border: none;
     background: transparent;
     display: inline-block;
+}
+
+.post-engagement span {
+    width: 24%;
+}
+
+.post-engagement div {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .post-engagement span i {
