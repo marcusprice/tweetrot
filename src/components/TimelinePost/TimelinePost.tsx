@@ -2,6 +2,7 @@ import { Show } from "solid-js"
 import styles from "./styles.module.css"
 import { PostType } from "../../types/post"
 import { A } from "@solidjs/router"
+import { timeSince } from "../../utils/utils"
 
 type PostProps = {
     post: PostType
@@ -20,7 +21,9 @@ export default function TimelinePost(props: PostProps) {
             <div class={styles["post"]}>
                 <div class={styles["user-names"]}>
                     <span class={styles["display-name"]}>{props.post.author.displayName}</span>
-                    <span class={styles["username"]}>@{props.post.author.username}</span>
+                    <span class={styles["additional-text"]}>@{props.post.author.username}</span>
+                    <span class={styles["additional-text"]}>•</span>
+                    <span class={styles["additional-text"]}>{timeSince(props.post.createdAt)}</span>
                 </div>
 
                 <div class={styles["post-content-container"]}>

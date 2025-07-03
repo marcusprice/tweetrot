@@ -11,13 +11,6 @@ export default function Timeline() {
     const [hasMore, setHasMore] = createSignal(true)
     const [fetchParams, setFetchParams] = createSignal({ view: FOR_YOU, offset: 0 })
 
-    // const fetchParams = createMemo(() => {
-    //     return {
-    //         view: view(),
-    //         offset: offset(),
-    //     }
-    // })
-
     function handleLoadMoreClick(e: MouseEvent) {
         e.preventDefault()
         setFetchParams((prev) => {
@@ -45,13 +38,6 @@ export default function Timeline() {
         }
         setPosts((prev) => [timelinePost, ...prev])
     }
-
-    // onMount(() => {
-    //     // Always reset on new mount
-    //     setPosts([])
-    //     setHasMore(true)
-    //     setOffset(0) // triggers createResource if fetchOffset changes
-    // })
 
     function onTimelineSelect(timeline: string) {
         setPosts([])

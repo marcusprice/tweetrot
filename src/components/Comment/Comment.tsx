@@ -1,4 +1,5 @@
 import { CommentType } from "../../types/post"
+import { timeSince } from "../../utils/utils"
 import styles from "./styles.module.css"
 import { Show } from "solid-js"
 
@@ -19,7 +20,11 @@ export default function Comment(props: CommentProps) {
             <div class={styles["comment"]}>
                 <div class={styles["user-names"]}>
                     <span class={styles["display-name"]}>{props.comment.author.displayName}</span>
-                    <span class={styles["username"]}>@{props.comment.author.username}</span>
+                    <span class={styles["additional-text"]}>@{props.comment.author.username}</span>
+                    <span class={styles["additional-text"]}>•</span>
+                    <span class={styles["additional-text"]}>
+                        {timeSince(props.comment.createdAt)}
+                    </span>
                 </div>
 
                 <div class={styles["comment-content-container"]}>

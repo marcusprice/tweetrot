@@ -43,8 +43,9 @@
     margin-right: 4px;
 }
 
-.username {
+.additional-text {
     color: #888;
+    margin-right: 4px;
 }
 
 .post-content {

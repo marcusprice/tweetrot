@@ -6,6 +6,7 @@ import styles from "./styles.module.css"
 import Comment from "../../components/Comment/Comment"
 import { CommentReply } from "../../components/CommentReply/CommentReply"
 import { user } from "../../store/user"
+import { timeSince } from "../../utils/utils"
 
 export function Post(): JSX.Element {
     const params = useParams()
@@ -38,7 +39,9 @@ export function Post(): JSX.Element {
                     <div class={styles["post"]}>
                         <div class={styles["user-names"]}>
                             <span class={styles["display-name"]}>{postData()?.author.displayName}</span>
-                            <span class={styles["username"]}>@{postData()?.author.username}</span>
+                            <span class={styles["additional-text"]}>@{postData()?.author.username}</span>
+                            <span class={styles["additional-text"]}>•</span>
+                            <span class={styles["additional-text"]}>{timeSince(postData()?.createdAt!)}</span>
                         </div>
 
                         <div class={styles["post-content-container"]}>
@@ -92,7 +95,6 @@ export function Post(): JSX.Element {
                     {(comment) => <Comment comment={comment}/>}
                 </For>
             </div>
-
         </Show>
     )
 }
