@@ -115,3 +115,11 @@ a {
 .liked-heart {
     color: #f91881 !important;
 }
+
+.retweeted i {
+    color: #00BA7C !important;
+}
+
+.bookmarked i {
+    color: #1D9BF0 !important;
+}

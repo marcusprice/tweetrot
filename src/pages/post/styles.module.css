@@ -71,6 +71,12 @@
     margin-bottom: 4px;
 }
 
+.postActionButton {
+    border: none;
+    background: transparent;
+    display: inline-block;
+}
+
 .post-engagement span i {
     margin-right: 8px;  
 }
@@ -81,4 +87,9 @@
 
 .bookmark-share i {
     margin: 0 8px; 
+}
+
+
+.liked-heart {
+    color: #f91881 !important;
 }

@@ -1,6 +1,6 @@
-import { JSX, For, Show, createResource } from "solid-js"
+import { JSX, For, Show, createResource, createEffect, createSignal } from "solid-js"
 import { useParams } from "@solidjs/router"
-import { fetchPost } from "../../dao/post"
+import { fetchPost, likePost } from "../../dao/post"
 import { CommentType, PostType } from "../../types/post"
 import styles from "./styles.module.css"
 import Comment from "../../components/Comment/Comment"
@@ -14,6 +14,12 @@ export function Post(): JSX.Element {
         () => parseInt(params.id),
         fetchPost
     )
+    const [liked, setLiked] = createSignal(false)
+    const [likeCount, setLikeCount] = createSignal(0)
+    createEffect(() => {
+        setLikeCount(postData()?.likeCount!)
+        setLiked(postData()?.liked!)
+    })
 
     function handleCommentReply(newComment: CommentType) {
         const currentPost: PostType = postData()!
@@ -22,6 +28,20 @@ export function Post(): JSX.Element {
             comments: [newComment, ...currentPost.comments],
         }
         mutate(newPost)
+    }
+
+    function handlePostLike(e: MouseEvent, isLiked: boolean) {
+        e.preventDefault()
+        const method = isLiked ? "DELETE" : "PUT"
+
+        likePost(postData()?.postID!, method).then(() => {
+            setLiked((prev) => !prev)
+            if (method === "PUT") {
+                setLikeCount((prev) => prev + 1)
+            } else {
+                setLikeCount((prev) => prev - 1)
+            }
+        })
     }
 
     // prettier-ignore
@@ -64,13 +84,36 @@ export function Post(): JSX.Element {
                                 </span>
 
                                 <span>
-                                    <i class="bi bi-repeat"></i>
+                                    <button
+                                        class={`
+                                            ${styles["postActionButton"]} 
+                                            ${postData()?.retweeted ? "retweeted" : ""}
+                                        `}>
+                                        <i class="bi bi-repeat"></i>
+                                    </button>
+
                                     {postData()?.retweetCount}
                                 </span>
 
                                 <span>
-                                    <i class="bi bi-heart"></i>
-                                    {postData()?.likeCount}
+                                    <Show when={liked()}>
+                                        <button
+                                            class={styles["postActionButton"]}
+                                            onclick={(e) => handlePostLike(e, liked())}
+                                        >
+                                            <i class={`bi bi-heart-fill ${styles["liked-heart"]}`}></i>
+                                        </button>
+                                    </Show>
+
+                                <Show when={!liked()}>
+                                    <button
+                                        class={styles["postActionButton"]}
+                                        onclick={(e) => handlePostLike(e, liked())}
+                                    >
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </Show>
+                                {likeCount()}
                                 </span>
 
                                 <span>

@@ -75,7 +75,14 @@ export default function TimelinePost(props: PostProps) {
                             </span>
 
                             <span>
-                                <i class="bi bi-repeat"></i>
+                                <button
+                                    class={`
+                                        ${styles["postActionButton"]} 
+                                        ${props.post.retweeted ? styles["retweeted"] : ""}
+                                    `}
+                                >
+                                    <i class="bi bi-repeat"></i>
+                                </button>
                                 {props.post.retweetCount}
                             </span>
 
@@ -106,8 +113,24 @@ export default function TimelinePost(props: PostProps) {
                             </span>
 
                             <div class={styles["bookmark-share"]}>
-                                <i class="bi bi-bookmark"></i>
-                                <i class="bi bi-share"></i>
+                                <Show when={props.post.bookmarked}>
+                                    <button
+                                        class={`
+                                        ${styles["postActionButton"]}
+                                        ${styles["bookmarked"]}
+                                    `}
+                                    >
+                                        <i class="bi bi-bookmark-fill"></i>
+                                    </button>
+                                </Show>
+                                <Show when={!props.post.bookmarked}>
+                                    <button class={styles["postActionButton"]}>
+                                        <i class="bi bi-bookmark"></i>
+                                    </button>
+                                </Show>
+                                <button class={styles["postActionButton"]}>
+                                    <i class="bi bi-share"></i>
+                                </button>
                             </div>
                         </div>
                     </div>

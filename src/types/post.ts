@@ -34,6 +34,8 @@ export interface PostType {
     author: Author
     comments: CommentType[]
     liked: boolean
+    retweeted: boolean
+    bookmarked: boolean
 }
 
 export interface TimelinePostType extends PostType {
