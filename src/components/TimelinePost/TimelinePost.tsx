@@ -3,7 +3,7 @@ import styles from "./styles.module.css"
 import { TimelinePostType } from "../../types/post"
 import { A } from "@solidjs/router"
 import { timeSince } from "../../utils/utils"
-import { likePost } from "../../dao/post"
+import { bookmarkPost, likePost, retweetPost } from "../../dao/post"
 
 type PostProps = {
     post: TimelinePostType
@@ -12,6 +12,9 @@ type PostProps = {
 export default function TimelinePost(props: PostProps) {
     const [liked, setLiked] = createSignal(props.post.liked)
     const [likeCount, setLikeCount] = createSignal(props.post.likeCount)
+    const [retweeted, setRetweeted] = createSignal(props.post.retweeted)
+    const [retweetCount, setRetweetCount] = createSignal(props.post.retweetCount)
+    const [bookmarked, setBookmarked] = createSignal(props.post.bookmarked)
 
     function handlePostLike(e: MouseEvent, isLiked: boolean) {
         e.preventDefault()
@@ -27,6 +30,30 @@ export default function TimelinePost(props: PostProps) {
         })
     }
 
+    function handlePostRetweet(e: MouseEvent, isRetweeted: boolean) {
+        e.preventDefault()
+        const method = isRetweeted ? "DELETE" : "PUT"
+
+        retweetPost(props.post.postID, method).then(() => {
+            setRetweeted((prev) => !prev)
+            if (method === "PUT") {
+                setRetweetCount((prev) => prev + 1)
+            } else {
+                setRetweetCount((prev) => prev - 1)
+            }
+        })
+    }
+
+    function handlePostBookmark(e: MouseEvent, isBookmarked: boolean) {
+        e.preventDefault()
+        const method = isBookmarked ? "DELETE" : "PUT"
+
+        bookmarkPost(props.post.postID, method).then(() => {
+            setBookmarked((prev) => !prev)
+        })
+    }
+
+    // prettier-ignore
     return (
         <div>
             <Show when={props.post.retweeterUsername !== ""}>
@@ -76,34 +103,32 @@ export default function TimelinePost(props: PostProps) {
 
                             <span>
                                 <button
-                                    class={`
-                                        ${styles["postActionButton"]} 
-                                        ${props.post.retweeted ? styles["retweeted"] : ""}
-                                    `}
+                                    onclick={(e) => handlePostRetweet(e, retweeted())}
+                                    class={styles["postActionButton"]}
                                 >
-                                    <i class="bi bi-repeat"></i>
+                                    <i
+                                        class={`
+                                            bi bi-repeat
+                                            ${retweeted() ? styles["retweeted"] : ""}
+                                        `}></i>
                                 </button>
-                                {props.post.retweetCount}
+                                {retweetCount()}
                             </span>
 
                             <span>
-                                <Show when={liked()}>
-                                    <button
-                                        class={styles["postActionButton"]}
-                                        onclick={(e) => handlePostLike(e, liked())}
-                                    >
+                                <button
+                                    class={styles["postActionButton"]}
+                                    onclick={(e) => handlePostLike(e, liked())}
+                                >
+                                    <Show when={liked()}>
                                         <i class={`bi bi-heart-fill ${styles["liked-heart"]}`}></i>
-                                    </button>
-                                </Show>
+                                    </Show>
 
-                                <Show when={!liked()}>
-                                    <button
-                                        class={styles["postActionButton"]}
-                                        onclick={(e) => handlePostLike(e, liked())}
-                                    >
+                                    <Show when={!liked()}>
                                         <i class="bi bi-heart"></i>
-                                    </button>
-                                </Show>
+                                    </Show>
+
+                                </button>
                                 {likeCount()}
                             </span>
 
@@ -113,21 +138,25 @@ export default function TimelinePost(props: PostProps) {
                             </span>
 
                             <div class={styles["bookmark-share"]}>
-                                <Show when={props.post.bookmarked}>
-                                    <button
-                                        class={`
-                                        ${styles["postActionButton"]}
-                                        ${styles["bookmarked"]}
-                                    `}
-                                    >
-                                        <i class="bi bi-bookmark-fill"></i>
-                                    </button>
-                                </Show>
-                                <Show when={!props.post.bookmarked}>
-                                    <button class={styles["postActionButton"]}>
+                                <button
+                                    onclick={(e) => handlePostBookmark(e, bookmarked())}
+                                    class={`
+                                    ${styles["postActionButton"]}
+                                `}
+                                >
+                                    <Show when={bookmarked()}>
+                                        <i
+                                            class={`
+                                                bi bi-bookmark-fill 
+                                                ${bookmarked() ? styles["bookmarked"] : ""}
+                                            `}
+                                        ></i>
+                                    </Show>
+
+                                    <Show when={!bookmarked()}>
                                         <i class="bi bi-bookmark"></i>
-                                    </button>
-                                </Show>
+                                    </Show>
+                                </button>
                                 <button class={styles["postActionButton"]}>
                                     <i class="bi bi-share"></i>
                                 </button>

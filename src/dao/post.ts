@@ -1,5 +1,5 @@
 import { StatusCodes } from "../constants/http"
-import { CREATE_POST, LIKE_POST, POST } from "../constants/routes"
+import { BOOKMARK_POST, CREATE_POST, LIKE_POST, POST, RETWEET_POST } from "../constants/routes"
 import { LOCAL_STORAGE_TOKEN_KEY } from "../constants/tokens"
 import {
     BadRequestError,
@@ -83,6 +83,46 @@ export function createPost(content: string, image: File | undefined): Promise<Po
 
 export function likePost(postID: number, method: "PUT" | "DELETE"): Promise<void> {
     const route = LIKE_POST.replace(":id", postID.toString())
+    const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+
+    const request = {
+        method: method,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return fetch(route, request).then((response) => {
+        if (response.status == StatusCodes.NO_CONTENT) {
+            return
+        } else {
+            // TODO: handle errors
+        }
+    })
+}
+
+export function retweetPost(postID: number, method: "PUT" | "DELETE"): Promise<void> {
+    const route = RETWEET_POST.replace(":id", postID.toString())
+    const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+
+    const request = {
+        method: method,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return fetch(route, request).then((response) => {
+        if (response.status == StatusCodes.NO_CONTENT) {
+            return
+        } else {
+            // TODO: handle errors
+        }
+    })
+}
+
+export function bookmarkPost(postID: number, method: "PUT" | "DELETE"): Promise<void> {
+    const route = BOOKMARK_POST.replace(":id", postID.toString())
     const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
 
     const request = {

@@ -116,10 +116,10 @@ a {
     color: #f91881 !important;
 }
 
-.retweeted i {
+.retweeted {
     color: #00BA7C !important;
 }
 
-.bookmarked i {
+.bookmarked {
     color: #1D9BF0 !important;
 }
