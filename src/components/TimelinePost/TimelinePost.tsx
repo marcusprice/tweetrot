@@ -10,47 +10,53 @@ type PostProps = {
 }
 
 export default function TimelinePost(props: PostProps) {
-    const [liked, setLiked] = createSignal(props.post.liked)
+    const [liked, setLiked] = createSignal(props.post.viewerLiked)
     const [likeCount, setLikeCount] = createSignal(props.post.likeCount)
-    const [retweeted, setRetweeted] = createSignal(props.post.retweeted)
+    const [retweeted, setRetweeted] = createSignal(props.post.viewerRetweeted)
     const [retweetCount, setRetweetCount] = createSignal(props.post.retweetCount)
-    const [bookmarked, setBookmarked] = createSignal(props.post.bookmarked)
+    const [bookmarked, setBookmarked] = createSignal(props.post.viewerBookmarked)
 
-    function handlePostLike(e: MouseEvent, isLiked: boolean) {
+    function handleLike(e: MouseEvent, isLiked: boolean) {
         e.preventDefault()
         const method = isLiked ? "DELETE" : "PUT"
 
-        likePost(props.post.postID, method).then(() => {
-            setLiked((prev) => !prev)
-            if (method === "PUT") {
-                setLikeCount((prev) => prev + 1)
-            } else {
-                setLikeCount((prev) => prev - 1)
-            }
-        })
+        if (props.post.type !== "comment-retweet") {
+            likePost(props.post.id, method).then(() => {
+                setLiked((prev) => !prev)
+                if (method === "PUT") {
+                    setLikeCount((prev) => prev + 1)
+                } else {
+                    setLikeCount((prev) => prev - 1)
+                }
+            })
+        }
     }
 
-    function handlePostRetweet(e: MouseEvent, isRetweeted: boolean) {
+    function handleRetweet(e: MouseEvent, isRetweeted: boolean) {
         e.preventDefault()
         const method = isRetweeted ? "DELETE" : "PUT"
 
-        retweetPost(props.post.postID, method).then(() => {
-            setRetweeted((prev) => !prev)
-            if (method === "PUT") {
-                setRetweetCount((prev) => prev + 1)
-            } else {
-                setRetweetCount((prev) => prev - 1)
-            }
-        })
+        if (props.post.type !== "comment-retweet") {
+            retweetPost(props.post.id, method).then(() => {
+                setRetweeted((prev) => !prev)
+                if (method === "PUT") {
+                    setRetweetCount((prev) => prev + 1)
+                } else {
+                    setRetweetCount((prev) => prev - 1)
+                }
+            })
+        }
     }
 
-    function handlePostBookmark(e: MouseEvent, isBookmarked: boolean) {
+    function handleBookmark(e: MouseEvent, isBookmarked: boolean) {
         e.preventDefault()
         const method = isBookmarked ? "DELETE" : "PUT"
 
-        bookmarkPost(props.post.postID, method).then(() => {
-            setBookmarked((prev) => !prev)
-        })
+        if (props.post.type !== "comment-retweet") {
+            bookmarkPost(props.post.id, method).then(() => {
+                setBookmarked((prev) => !prev)
+            })
+        }
     }
 
     // prettier-ignore
@@ -59,7 +65,7 @@ export default function TimelinePost(props: PostProps) {
             <Show when={props.post.retweeterUsername !== ""}>
                 <div class={styles["retweeted-by"]}>
                     <i class="bi bi-repeat"></i>
-                    {props.post.retweeterDisplayName} retweeted
+                    {props.post.retweeter.displayName} retweeted
                 </div>
             </Show>
             <div class={styles["timeline-post"]}>
@@ -81,8 +87,18 @@ export default function TimelinePost(props: PostProps) {
                     </div>
 
                     <div class={styles["post-content-container"]}>
-                        <A inactiveClass="post-link" href={`/post/${props.post.postID}`}>
+                        <A inactiveClass="post-link" href={`/post/${props.post.id}`}>
                             <Show when={props.post.content}>
+                                <Show when={props.post.parentPostID}>
+                                    <div>
+                                        <span class={styles["reply-to-text"]}>
+                                            Replying to @{props.post.parentPostAuthorUsername}
+                                            <Show when={props.post.parentCommentID}>
+                                                &nbsp;and @{props.post.parentCommentAuthorUsername} 
+                                            </Show>
+                                        </span>
+                                    </div>
+                                </Show>
                                 <span class={styles["post-content"]}>{props.post.content}</span>
                             </Show>
 
@@ -103,7 +119,7 @@ export default function TimelinePost(props: PostProps) {
 
                             <span>
                                 <button
-                                    onclick={(e) => handlePostRetweet(e, retweeted())}
+                                    onclick={(e) => handleRetweet(e, retweeted())}
                                     class={styles["postActionButton"]}
                                 >
                                     <i
@@ -118,7 +134,7 @@ export default function TimelinePost(props: PostProps) {
                             <span>
                                 <button
                                     class={styles["postActionButton"]}
-                                    onclick={(e) => handlePostLike(e, liked())}
+                                    onclick={(e) => handleLike(e, liked())}
                                 >
                                     <Show when={liked()}>
                                         <i class={`bi bi-heart-fill ${styles["liked-heart"]}`}></i>
@@ -139,7 +155,7 @@ export default function TimelinePost(props: PostProps) {
 
                             <div class={styles["bookmark-share"]}>
                                 <button
-                                    onclick={(e) => handlePostBookmark(e, bookmarked())}
+                                    onclick={(e) => handleBookmark(e, bookmarked())}
                                     class={`
                                     ${styles["postActionButton"]}
                                 `}

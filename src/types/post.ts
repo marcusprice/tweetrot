@@ -4,6 +4,11 @@ export type Author = {
     avatar: string
 }
 
+export type Retweeter = {
+    username: string
+    displayName: string
+}
+
 export interface CommentType {
     commentID: number
     postID: number
@@ -21,7 +26,7 @@ export interface CommentType {
 }
 
 export interface PostType {
-    postID: number
+    id: number
     content: string
     image: string
     commentCount: number
@@ -31,17 +36,24 @@ export interface PostType {
     impressions: number
     createdAt: string
     updatedAt: string
-    author: Author
     comments: CommentType[]
-    liked: boolean
-    retweeted: boolean
-    bookmarked: boolean
+    viewerLiked: boolean
+    viewerRetweeted: boolean
+    viewerBookmarked: boolean
+
+    author: Author
+    retweeter: Retweeter
 }
 
 export interface TimelinePostType extends PostType {
+    type: "post" | "post-retweet" | "comment-retweet"
     isRetweet: boolean
     retweeterUsername: string
     retweeterDisplayName: string
+    parentPostID: number
+    parentPostAuthorUsername: string
+    parentCommentID: number
+    parentCommentAuthorUsername: string
 }
 
 export interface TimelineCommentType extends CommentType {

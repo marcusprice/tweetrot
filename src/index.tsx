@@ -15,6 +15,19 @@ render(
             <Route path="/login" component={Login} />
 
             <Route
+                path="/bookarks"
+                component={() => {
+                    return (
+                        <RequireAuth redirectTo="/login">
+                            <AppShell>
+                                <Timeline />
+                            </AppShell>
+                        </RequireAuth>
+                    )
+                }}
+            />
+
+            <Route
                 path="/post/:id"
                 component={() => {
                     return (
