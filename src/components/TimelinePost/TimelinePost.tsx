@@ -92,9 +92,15 @@ export default function TimelinePost(props: PostProps) {
                                 <Show when={props.post.parentPostID}>
                                     <div>
                                         <span class={styles["reply-to-text"]}>
-                                            Replying to @{props.post.parentPostAuthorUsername}
+                                            Replying to&nbsp;
+                                            <span class={styles["username-link-text"]}>
+                                                @{props.post.parentPostAuthorUsername}
+                                            </span>
                                             <Show when={props.post.parentCommentID}>
-                                                &nbsp;and @{props.post.parentCommentAuthorUsername} 
+                                                &nbsp;and 
+                                                <span class={styles["username-link-text"]}>
+                                                    @{props.post.parentCommentAuthorUsername} 
+                                                </span>
                                             </Show>
                                         </span>
                                     </div>

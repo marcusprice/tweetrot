@@ -66,6 +66,10 @@ a {
     font-size: 14px;
 }
 
+.username-link-text {
+    color: #1D9BF0;
+}
+
 .post-content {
     display: block;
 }
