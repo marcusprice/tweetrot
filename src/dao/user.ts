@@ -1,4 +1,9 @@
-import { GET_POST_AUTHOR, LOGIN_ENDPOINT, VALIDATE_TOKEN_ENDPOINT } from "../constants/routes"
+import {
+    FOLLOW_USER,
+    GET_POST_AUTHOR,
+    LOGIN_ENDPOINT,
+    VALIDATE_TOKEN_ENDPOINT,
+} from "../constants/routes"
 import { User } from "../types/user"
 import { setUser } from "../store/user"
 import {
@@ -119,4 +124,24 @@ export function fetchAuthor(postID: number): Promise<Author> {
             const authorData = json as Author
             return authorData
         })
+}
+
+export function follow(username: string, action: "follow" | "unfollow"): Promise<void> {
+    const route = FOLLOW_USER.replace(":username", username)
+    const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+
+    const request = {
+        method: action === "follow" ? "PUT" : "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return fetch(route, request).then((response) => {
+        if (response.status !== StatusCodes.NO_CONTENT) {
+            response.text().then((respBody) => {
+                throw new InternalServerError(respBody)
+            })
+        }
+    })
 }

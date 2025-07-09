@@ -20,10 +20,13 @@ export default function TimelinePost(props: PostProps) {
     const [profileCardVisible, setProfileCardVisible] = createSignal(false)
     const [mousePos, setMousePos] = createSignal({ x: 0, y: 0 })
     const [postID, setPostID] = createSignal<number | undefined>()
-    const [authorData] = createResource(postID, (authorID) => {
-        // TODO: need to handle comments as well
-        return fetchAuthor(authorID)
-    })
+    const [authorData, { mutate: mutateAuthor, refetch: refetchAuthor }] = createResource(
+        postID,
+        (authorID) => {
+            // TODO: need to handle comments as well
+            return fetchAuthor(authorID)
+        }
+    )
 
     function handleLike(e: MouseEvent, isLiked: boolean) {
         e.preventDefault()
@@ -69,9 +72,11 @@ export default function TimelinePost(props: PostProps) {
     }
 
     function toggleProfileCard({ x, y }: MouseEvent) {
-        if (!authorData()) {
-            // triggers author fetch
+        // trigger author fetch
+        if (!postID()) {
             setPostID(props.post.id)
+        } else {
+            refetchAuthor()
         }
 
         setMousePos({ x, y: y + 12 })
@@ -94,15 +99,30 @@ export default function TimelinePost(props: PostProps) {
         }
     }
 
+    function onFollow(action: "follow" | "unfollow") {
+        mutateAuthor((prev) => {
+            const updatedAuthor = { ...prev! }
+            updatedAuthor.viewerFollowing = action === "follow"
+            if (action === "follow") {
+                updatedAuthor.followerCount!++
+            } else {
+                updatedAuthor.followerCount!--
+            }
+
+            return updatedAuthor
+        })
+    }
+
     // prettier-ignore
     return (
         <>
             <Show when={profileCardVisible() && authorData()}>
                 <ProfileCard
-                    onEnter={cancelHideCard}
-                    onLeave={scheduleHideCard}
                     user={authorData()!}
                     position={mousePos()}
+                    onEnter={cancelHideCard}
+                    onLeave={scheduleHideCard}
+                    onFollow={onFollow}
                 />
             </Show>
             <div>

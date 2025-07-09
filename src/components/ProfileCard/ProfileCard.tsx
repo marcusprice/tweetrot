@@ -1,16 +1,32 @@
 import { createSignal, JSX, Setter, Show } from "solid-js"
 import styles from "./styles.module.css"
 import { Author } from "../../types/post"
+import { follow } from "../../dao/user"
 
 type ProfileCardProps = {
     user: Author
     position: { x: number; y: number }
     onEnter: () => void
     onLeave: () => void
+    onFollow: (action: "follow" | "unfollow") => void
 }
 
 export default function ProfileCard(props: ProfileCardProps): JSX.Element {
     const [mouseOnButton, setMouseOnButton] = createSignal(false)
+
+    function handleFollow(e: MouseEvent, action: "follow" | "unfollow") {
+        e.preventDefault()
+
+        follow(props.user.username, action)
+            .then(() => {
+                // handle post follow/unfollow action
+                props.onFollow(action)
+            })
+            .catch((err) => {
+                // TODO: handle error
+            })
+    }
+
     // prettier-ignore
     return(
         <div
@@ -29,13 +45,17 @@ export default function ProfileCard(props: ProfileCardProps): JSX.Element {
                             class={styles["following-button"]}
                             onMouseEnter={() => setMouseOnButton(true)}
                             onMouseLeave={() => setMouseOnButton(false)}
+                            onClick={(e) => {handleFollow(e, "unfollow")}}
                         >
                             {mouseOnButton() ? "Unfollow" : "Following"}
                         </button>
                     </Show>
 
                     <Show when={!props.user.viewerFollowing}>
-                        <button class={styles["follow-button"]}>
+                        <button
+                            class={styles["follow-button"]}
+                            onClick={(e) => {handleFollow(e, "follow")}}
+                        >
                             Follow
                         </button>
                     </Show>
