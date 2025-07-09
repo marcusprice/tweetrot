@@ -2,6 +2,7 @@ import { createSignal, JSX, Setter, Show } from "solid-js"
 import styles from "./styles.module.css"
 import { Author } from "../../types/post"
 import { follow } from "../../dao/user"
+import { user } from "../../store/user"
 
 type ProfileCardProps = {
     user: Author
@@ -40,24 +41,26 @@ export default function ProfileCard(props: ProfileCardProps): JSX.Element {
                     class={styles["avatar"]}
                     style={`background-image: url('${props.user.avatar}')`}
                 ></div> 
-                    <Show when={props.user.viewerFollowing}>
-                        <button 
-                            class={styles["following-button"]}
-                            onMouseEnter={() => setMouseOnButton(true)}
-                            onMouseLeave={() => setMouseOnButton(false)}
-                            onClick={(e) => {handleFollow(e, "unfollow")}}
-                        >
-                            {mouseOnButton() ? "Unfollow" : "Following"}
-                        </button>
-                    </Show>
+                    <Show when={props.user.username !== user()?.username}>
+                        <Show when={props.user.viewerFollowing}>
+                            <button 
+                                class={styles["following-button"]}
+                                onMouseEnter={() => setMouseOnButton(true)}
+                                onMouseLeave={() => setMouseOnButton(false)}
+                                onClick={(e) => {handleFollow(e, "unfollow")}}
+                            >
+                                {mouseOnButton() ? "Unfollow" : "Following"}
+                            </button>
+                        </Show>
 
-                    <Show when={!props.user.viewerFollowing}>
-                        <button
-                            class={styles["follow-button"]}
-                            onClick={(e) => {handleFollow(e, "follow")}}
-                        >
-                            Follow
-                        </button>
+                        <Show when={!props.user.viewerFollowing}>
+                            <button
+                                class={styles["follow-button"]}
+                                onClick={(e) => {handleFollow(e, "follow")}}
+                            >
+                                Follow
+                            </button>
+                        </Show>
                     </Show>
             </div>
             <div class={styles["text-content"]}>
