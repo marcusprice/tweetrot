@@ -1,10 +1,11 @@
-import { createSignal, Show } from "solid-js"
+import { createResource, createSignal, Show } from "solid-js"
 import styles from "./styles.module.css"
 import { TimelinePostType } from "../../types/post"
 import { A } from "@solidjs/router"
 import { timeSince } from "../../utils/utils"
 import { bookmarkPost, likePost, retweetPost } from "../../dao/post"
 import ProfileCard from "../ProfileCard/ProfileCard"
+import { fetchAuthor } from "../../dao/user"
 
 type PostProps = {
     post: TimelinePostType
@@ -18,6 +19,11 @@ export default function TimelinePost(props: PostProps) {
     const [bookmarked, setBookmarked] = createSignal(props.post.viewerBookmarked)
     const [profileCardVisible, setProfileCardVisible] = createSignal(false)
     const [mousePos, setMousePos] = createSignal({ x: 0, y: 0 })
+    const [postID, setPostID] = createSignal<number | undefined>()
+    const [authorData] = createResource(postID, (authorID) => {
+        // TODO: need to handle comments as well
+        return fetchAuthor(authorID)
+    })
 
     function handleLike(e: MouseEvent, isLiked: boolean) {
         e.preventDefault()
@@ -63,6 +69,11 @@ export default function TimelinePost(props: PostProps) {
     }
 
     function toggleProfileCard({ x, y }: MouseEvent) {
+        if (!authorData()) {
+            // triggers author fetch
+            setPostID(props.post.id)
+        }
+
         setMousePos({ x, y: y + 12 })
         setTimeout(() => {
             setProfileCardVisible(true)
@@ -86,16 +97,16 @@ export default function TimelinePost(props: PostProps) {
     // prettier-ignore
     return (
         <>
-            <Show when={profileCardVisible()}>
+            <Show when={profileCardVisible() && authorData()}>
                 <ProfileCard
                     onEnter={cancelHideCard}
                     onLeave={scheduleHideCard}
-                    user={props.post.author}
+                    user={authorData()!}
                     position={mousePos()}
                 />
             </Show>
             <div>
-                <Show when={props.post.retweeterUsername !== ""}>
+                <Show when={props.post.isRetweet}>
                     <div class={styles["retweeted-by"]}>
                         <i class="bi bi-repeat"></i>
                         {props.post.retweeter.displayName} retweeted

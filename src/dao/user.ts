@@ -1,4 +1,4 @@
-import { LOGIN_ENDPOINT, VALIDATE_TOKEN_ENDPOINT } from "../constants/routes"
+import { GET_POST_AUTHOR, LOGIN_ENDPOINT, VALIDATE_TOKEN_ENDPOINT } from "../constants/routes"
 import { User } from "../types/user"
 import { setUser } from "../store/user"
 import {
@@ -10,6 +10,7 @@ import {
 } from "../errors/errors"
 import { StatusCodes } from "../constants/http"
 import { LOCAL_STORAGE_TOKEN_KEY } from "../constants/tokens"
+import { Author } from "../types/post"
 
 export function login(identifier: string, password: string): Promise<void> {
     const request = {
@@ -92,5 +93,30 @@ export function validateToken(token: string): Promise<User> {
         .then((userJson) => {
             const user = userJson as User
             return user
+        })
+}
+
+export function fetchAuthor(postID: number): Promise<Author> {
+    const token = window.localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
+    const route = GET_POST_AUTHOR.replace(":id", postID.toString())
+
+    const request = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return fetch(route, request)
+        .then((response) => {
+            if (response.status !== StatusCodes.OK) {
+                throw new BadRequestError("")
+            }
+
+            return response.json()
+        })
+        .then((json) => {
+            const authorData = json as Author
+            return authorData
         })
 }

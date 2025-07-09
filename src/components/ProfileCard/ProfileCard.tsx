@@ -1,4 +1,4 @@
-import { JSX, Setter } from "solid-js"
+import { createSignal, JSX, Setter, Show } from "solid-js"
 import styles from "./styles.module.css"
 import { Author } from "../../types/post"
 
@@ -10,6 +10,7 @@ type ProfileCardProps = {
 }
 
 export default function ProfileCard(props: ProfileCardProps): JSX.Element {
+    const [mouseOnButton, setMouseOnButton] = createSignal(false)
     // prettier-ignore
     return(
         <div
@@ -23,23 +24,33 @@ export default function ProfileCard(props: ProfileCardProps): JSX.Element {
                     class={styles["avatar"]}
                     style={`background-image: url('${props.user.avatar}')`}
                 ></div> 
-                <button class={styles["follow-button"]}>
-                    Follow
-                </button>
+                    <Show when={props.user.viewerFollowing}>
+                        <button 
+                            class={styles["following-button"]}
+                            onMouseEnter={() => setMouseOnButton(true)}
+                            onMouseLeave={() => setMouseOnButton(false)}
+                        >
+                            {mouseOnButton() ? "Unfollow" : "Following"}
+                        </button>
+                    </Show>
+
+                    <Show when={!props.user.viewerFollowing}>
+                        <button class={styles["follow-button"]}>
+                            Follow
+                        </button>
+                    </Show>
             </div>
             <div class={styles["text-content"]}>
                 <span class={styles["display-name"]}>{props.user.displayName}</span>
                 <span class={styles["username"]}>@{props.user.username}</span>
                 <span class={styles["bio-text"]}>
-                    FBI Special Agent 🍩 Coffee connoisseur ☕️ Dreams, owls &
-                    mysteries 🦉 “Damn fine cup of coffee” kind of guy. 
-                    Reporting live from Twin Peaks.
+                    {props.user.bio}
                 </span>
                 <div class={styles["following-details"]}>
-                    <span class={styles["following-details-count"]}>3</span>
+                    <span class={styles["following-details-count"]}>{props.user.followingCount}</span>
                     <span class={styles["following-details-text"]}>Following</span>
                     
-                    <span class={styles["following-details-count"]}>5</span>
+                    <span class={styles["following-details-count"]}>{props.user.followerCount}</span>
                     <span class={styles["following-details-text"]}>Followers</span>
                 </div>
             </div>

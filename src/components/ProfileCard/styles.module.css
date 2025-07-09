@@ -40,6 +40,30 @@
     border-radius: 32px;
 }
 
+.follow-button:hover {
+    background: #999;
+}
+
+.following-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: #000;
+    font-weight: 700;
+    padding: 0;
+    height: 38px;
+    width: 104px;
+    border: solid 1px #444;
+    border-radius: 32px;
+}
+
+.following-button:hover {
+    border: solid 1px #67070f;
+    background-color: #190304;
+    color: #f4222d;
+}
+
 .text-content span {
     display: block;
 }

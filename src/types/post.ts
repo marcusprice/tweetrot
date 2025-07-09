@@ -2,6 +2,10 @@ export type Author = {
     username: string
     displayName: string
     avatar: string
+    bio?: string
+    followingCount?: number
+    followerCount?: number
+    viewerFollowing?: boolean
 }
 
 export type Retweeter = {
